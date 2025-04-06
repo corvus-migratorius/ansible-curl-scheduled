@@ -1,11 +1,11 @@
 [Unit]
-Description=Run an HTTP request via curl
-Wants=curl-scheduled.timer
+Description=Run an HTTP request via curl designated '%i'
 After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/curl {{ curl_args }} {{ url }}
+EnvironmentFile=/etc/systemd/system/%i.env
+ExecStart=/usr/bin/curl $CURL_ARGS "$URL"
 Restart=no 
 
 # Security hardening

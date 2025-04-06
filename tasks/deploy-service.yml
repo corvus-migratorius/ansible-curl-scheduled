@@ -1,0 +1,19 @@
+---
+- name: "Deploy-Service | Push the environment file for the service: '{{ service.name }}'"
+  vars:
+    curl_args: "{{ service.curl_args | default(default_curl_args) }}"
+    url: "{{ service.url }}"
+  register: env
+  ansible.builtin.template:
+    src: "placeholder.env.j2"
+    dest: "/etc/systemd/system/{{ service.name }}.env"
+    mode: "0660"
+
+- name: "Deploy-Service | Enable and start the service: '{{ service.name }}'"  # noqa: no-handler
+  become: true
+  when: env.changed
+  ansible.builtin.systemd:
+    name: "curl-scheduled@{{ service.name }}.timer"
+    state: started
+    enabled: true
+    daemon_reload: true
