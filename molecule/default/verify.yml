@@ -7,7 +7,7 @@
     - name: "Check the timer status"
       register: timer
       ansible.builtin.systemd:
-        name: "curl-scheduled.timer"
+        name: "curl-scheduled@localhost-test.timer"
 
     - name: "Assert that the timer is running"
       ansible.builtin.assert:
@@ -19,7 +19,7 @@
     - name: "Check the service status"
       register: service
       ansible.builtin.systemd:
-        name: "curl-scheduled.service"
+        name: "curl-scheduled@localhost-test.service"
 
     - name: "Assert that the service exited with a 0/SUCCESS status"
       ansible.builtin.assert:
