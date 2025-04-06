@@ -16,7 +16,7 @@
         mode: "0664"
         line: "OK"
 
-    - name: "Simulate a remote HTTP server on localhost"
+    - name: "Simulate a remote HTTP server on localhost - localhost-test-zero"
       changed_when: false
       async: 1
       poll: 0
@@ -26,8 +26,21 @@
         cmd: nohup python3 -m http.server 8080 </dev/null >/dev/null 2>&1 &
         executable: /bin/bash
 
+    - name: "Simulate a remote HTTP server on localhost - localhost-test-one"
+      changed_when: false
+      async: 1
+      poll: 0
+      args:
+        chdir: "/test"
+      ansible.builtin.shell:
+        cmd: nohup python3 -m http.server 8081 </dev/null >/dev/null 2>&1 &
+        executable: /bin/bash
+
   roles:
     - role: genlab.curl_scheduled
       services:
-        - name: "localhost-test"
+        - name: "localhost-test-zero"
           url: "http://127.0.0.1:8080"
+        - name: "localhost-test-one"
+          url: "http://127.0.0.1:8081"
+          # curl_args: "-fsS -m 10"
