@@ -3,7 +3,6 @@ Description=Trigger a curl command designated '%i'
 Requires=curl-scheduled@%i.service
 
 [Timer]
-EnvironmentFile=/etc/systemd/system/%i.env
 Unit=curl-scheduled@%i.service
 OnCalendar=minutely
 AccuracySec=1us
