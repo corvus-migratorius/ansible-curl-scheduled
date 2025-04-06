@@ -1,0 +1,14 @@
+---
+- name: "Install-Units | Create systemd service file"
+  ansible.builtin.template:
+    src: "curl-scheduled@.service"
+    dest: "/etc/systemd/system/curl-scheduled@.service"
+    mode: "0660"
+    validate: systemd-analyze verify %s
+
+- name: "Install-Units | Create systemd timer file"
+  ansible.builtin.template:
+    src: "curl-scheduled@.timer"
+    dest: "/etc/systemd/system/curl-scheduled@.timer"
+    mode: "0660"
+    validate: systemd-analyze verify %s
