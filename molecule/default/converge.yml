@@ -16,24 +16,18 @@
         mode: "0664"
         line: "OK"
 
-    - name: "Simulate a remote HTTP server on localhost - localhost-test-zero"
+    - name: "Simulate remote HTTP server(s) directly on localhost"
       changed_when: false
       async: 1
       poll: 0
       args:
         chdir: "/test"
+      loop:
+        - 8080
+        - 8081
+        - 8082
       ansible.builtin.shell:
-        cmd: nohup python3 -m http.server 8080 </dev/null >/dev/null 2>&1 &
-        executable: /bin/bash
-
-    - name: "Simulate a remote HTTP server on localhost - localhost-test-one"
-      changed_when: false
-      async: 1
-      poll: 0
-      args:
-        chdir: "/test"
-      ansible.builtin.shell:
-        cmd: nohup python3 -m http.server 8081 </dev/null >/dev/null 2>&1 &
+        cmd: nohup python3 -m http.server {{ item }} </dev/null >/dev/null 2>&1 &
         executable: /bin/bash
 
   roles:
@@ -45,3 +39,7 @@
         - label: "localhost-test-one"
           url: "http://127.0.0.1:8081"
           schedule: hourly
+        - label: "localhost-test-chained-curl"
+          curl_cmd: '/usr/bin/curl "http://127.0.0.1:8081" && /usr/bin/curl'
+          url: "http://127.0.0.1:8082"
+          schedule: minutely

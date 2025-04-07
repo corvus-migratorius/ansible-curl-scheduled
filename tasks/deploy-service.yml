@@ -3,6 +3,7 @@
   vars:
     label: "{{ job.label }}"
     url: "{{ job.url }}"
+    curl_cmd: "{{ job.curl_cmd | default(default_curl_cmd) }}"
     curl_args: "{{ job.curl_args | default(default_curl_args) }}"
   register: service
   ansible.builtin.template:

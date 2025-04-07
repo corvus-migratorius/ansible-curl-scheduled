@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/curl {{ curl_args }} "{{ url }}"
+ExecStart={{ curl_cmd }} {{ curl_args }} "{{ url }}"
 Restart=no 
 
 # Security hardening
