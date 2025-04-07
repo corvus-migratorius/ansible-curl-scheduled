@@ -1,19 +1,32 @@
 ---
-- name: "Deploy-Service | Push the environment file for the service: '{{ service.name }}'"
+- name: "Deploy-Service | Create systemd service file: '{{ job.label }}'"
   vars:
-    curl_args: "{{ service.curl_args | default(default_curl_args) }}"
-    url: "{{ service.url }}"
-  register: env
+    label: "{{ job.label }}"
+    url: "{{ job.url }}"
+    curl_args: "{{ job.curl_args | default(default_curl_args) }}"
+  register: service
   ansible.builtin.template:
-    src: "placeholder.env.j2"
-    dest: "/etc/systemd/system/{{ service.name }}.env"
+    src: "placeholder.service"
+    dest: "/etc/systemd/system/curl-{{ job.label }}.service"
     mode: "0660"
+    validate: systemd-analyze verify %s
 
-- name: "Deploy-Service | Enable and start the service: '{{ service.name }}'"  # noqa: no-handler
+- name: "Deploy-Service | Create systemd timer file: '{{ job.label }}'"
+  vars:
+    label: "{{ job.label }}"
+    schedule: "{{ job.schedule | default(default_schedule) }}"
+  register: timer
+  ansible.builtin.template:
+    src: "placeholder.timer"
+    dest: "/etc/systemd/system/curl-{{ job.label }}.timer"
+    mode: "0660"
+    validate: systemd-analyze verify %s
+
+- name: "Deploy-Service | Enable and start the timer: '{{ job.label }}'"  # noqa: no-handler
   become: true
-  when: env.changed
+  when: service.changed or timer.changed
   ansible.builtin.systemd:
-    name: "curl-scheduled@{{ service.name }}.timer"
+    name: "curl-{{ job.label }}.timer"
     state: started
     enabled: true
     daemon_reload: true

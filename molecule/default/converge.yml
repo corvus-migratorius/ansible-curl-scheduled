@@ -39,8 +39,9 @@
   roles:
     - role: genlab.curl_scheduled
       services:
-        - name: "localhost-test-zero"
+        - label: "localhost-test-zero"
           url: "http://127.0.0.1:8080"
-        - name: "localhost-test-one"
+          schedule: minutely
+        - label: "localhost-test-one"
           url: "http://127.0.0.1:8081"
-          # curl_args: "-fsS -m 10"
+          schedule: hourly
