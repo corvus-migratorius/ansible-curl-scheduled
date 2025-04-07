@@ -12,11 +12,8 @@
     name: curl
     state: present
 
-- name: "Push systemd unit templates"
-  ansible.builtin.include_tasks: "install-units.yml"
-
 - name: "Configure and deploy systemd service"
   loop: "{{ services }}"
   loop_control:
-    loop_var: "service"
+    loop_var: "job"
   ansible.builtin.include_tasks: "deploy-service.yml"

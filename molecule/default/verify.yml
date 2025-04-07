@@ -7,7 +7,7 @@
     - name: "Check the timer status - localhost-test-zero"
       register: timer_zero
       ansible.builtin.systemd:
-        name: "curl-scheduled@localhost-test-zero.timer"
+        name: "curl-localhost-test-zero.timer"
 
     - name: "Assert that the localhost-test-zero timer is running"
       ansible.builtin.assert:
@@ -19,7 +19,7 @@
     - name: "Check the timer status - localhost-test-one"
       register: timer_one
       ansible.builtin.systemd:
-        name: "curl-scheduled@localhost-test-one.timer"
+        name: "curl-localhost-test-one.timer"
 
     - name: "Assert that the localhost-test-one timer is running"
       ansible.builtin.assert:
@@ -31,7 +31,7 @@
     - name: "Check the service status"
       register: service_zero
       ansible.builtin.systemd:
-        name: "curl-scheduled@localhost-test-zero.service"
+        name: "curl-localhost-test-zero.service"
 
     - name: "Assert that the localhost-test-zero service exited with a 0/SUCCESS status"
       ansible.builtin.assert:
@@ -43,7 +43,7 @@
     - name: "Check the service status"
       register: service_one
       ansible.builtin.systemd:
-        name: "curl-scheduled@localhost-test-one.service"
+        name: "curl-localhost-test-one.service"
 
     - name: "Assert that the localhost-test-one service exited with a 0/SUCCESS status"
       ansible.builtin.assert:

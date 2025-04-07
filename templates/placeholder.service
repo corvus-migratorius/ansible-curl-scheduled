@@ -1,11 +1,10 @@
 [Unit]
-Description=Run an HTTP request via curl designated '%i'
+Description=Run an HTTP request via curl designated '{{ label }}'
 After=network.target
 
 [Service]
 Type=oneshot
-EnvironmentFile=/etc/systemd/system/%i.env
-ExecStart=/usr/bin/curl $CURL_ARGS "$URL"
+ExecStart=/usr/bin/curl {{ curl_args }} "{{ url }}"
 Restart=no 
 
 # Security hardening
