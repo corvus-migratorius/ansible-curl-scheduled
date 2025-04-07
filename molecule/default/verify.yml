@@ -4,6 +4,8 @@
   gather_facts: false
 
   tasks:
+    # Verify the systemd timers
+
     - name: "Check the timer status - localhost-test-zero"
       register: timer_zero
       ansible.builtin.systemd:
@@ -28,7 +30,21 @@
         success_msg: "Timer is running"
         fail_msg: "Unexpected timer state: '{{ timer_one.status.ActiveState }}'"
 
-    - name: "Check the service status"
+    - name: "Check the timer status - localhost-test-chained-curl"
+      register: timer_chained_curl
+      ansible.builtin.systemd:
+        name: "curl-localhost-test-chained-curl.timer"
+
+    - name: "Assert that the localhost-test-chained-curl timer is running"
+      ansible.builtin.assert:
+        that:
+          - timer_chained_curl.status.ActiveState == "active"
+        success_msg: "Timer is running"
+        fail_msg: "Unexpected timer state: '{{ timer_chained_curl.status.ActiveState }}'"
+
+    ## Verify the systemd services
+
+    - name: "Check the service status - zero"
       register: service_zero
       ansible.builtin.systemd:
         name: "curl-localhost-test-zero.service"
@@ -40,7 +56,7 @@
         success_msg: "Service has exited with a 0/SUCCESS status"
         fail_msg: "Unexpected service status code: '{{ service_zero.status.ExecMainStatus }}'"
 
-    - name: "Check the service status"
+    - name: "Check the service status - one"
       register: service_one
       ansible.builtin.systemd:
         name: "curl-localhost-test-one.service"
@@ -51,3 +67,15 @@
           - 'service_one.status.ExecMainStatus == "0"'
         success_msg: "Service has exited with a 0/SUCCESS status"
         fail_msg: "Unexpected service status code: '{{ service_one.status.ExecMainStatus }}'"
+
+    - name: "Check the service status - chained-curl"
+      register: service_chained_curl
+      ansible.builtin.systemd:
+        name: "curl-localhost-test-chained-curl.service"
+
+    - name: "Assert that the localhost-test-chained-curl service exited with a 0/SUCCESS status"
+      ansible.builtin.assert:
+        that:
+          - 'service_chained_curl.status.ExecMainStatus == "0"'
+        success_msg: "Service has exited with a 0/SUCCESS status"
+        fail_msg: "Unexpected service status code: '{{ service_chained_curl.status.ExecMainStatus }}'"
