@@ -68,7 +68,7 @@
         success_msg: "Service has exited with a 0/SUCCESS status"
         fail_msg: "Unexpected service status code: '{{ service_one.status.ExecMainStatus }}'"
 
-    - name: "Check the service status - chained-curl"
+    - name: "Check the service status - localhost-test-chained-curl"
       register: service_chained_curl
       ansible.builtin.systemd:
         name: "curl-localhost-test-chained-curl.service"
